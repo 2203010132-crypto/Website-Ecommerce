@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cek Harga - Skyline Cloth</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f9f9f9;
+        }
+        .card {
+            background: #ffffff;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 450px;
+            border: none;
+        }
+        h2 {
+            font-weight: bold;
+            color: #444444;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 1rem;
+        }
+        .details p {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1rem;
+            color: #555555;
+            margin-bottom: 0.5rem;
+        }
+        .details p span {
+            font-weight: bold;
+            color: #333333;
+        }
+        .btn {
+            background: linear-gradient(135deg, #007bff, #007bff);
+            color: #ffffff;
+            font-weight: bold;
+            border-radius: 10px;
+            padding: 0.75rem;
+            border: none;
+            text-transform: uppercase;
+            transition: transform 0.2s, box-shadow 0.2s, background 0.3s;
+        }
+        .btn:hover {
+            background: linear-gradient(135deg, #007bff, #007bff);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>Harga Pesanan</h2>
+        <div class="details">
+            <p><span>Bahan:</span> <span id="bahan-harga"></span></p>
+            <p><span>Sablon:</span> <span id="sablon-harga"></span></p>
+            <p><span>Jumlah:</span> <span id="jumlah-harga"></span></p>
+            <p><span>Total Harga:</span> <span id="total-harga"></span></p>
+        </div>
+        <a id="lanjut-pembayaran-btn" href="#" class="btn w-100 mt-4">Lanjut ke Pembayaran</a>
+    </div>
+
+    <script>
+        // Ambil parameter dari URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const bahan = urlParams.get('bahan');
+        const sablon = urlParams.get('sablon');
+        const jumlah = parseInt(urlParams.get('jumlah'), 10);
+
+        // Harga untuk bahan dan sablon
+        const hargaBahan = {
+            "30s": 35000,
+            "28s": 40000,
+            "24s": 45000,
+        };
+        const hargaSablon = {
+            "Sablon 1 Warna": 10000,
+            "Sablon 2 Warna": 15000,
+            "Sablon Full Color": 25000
+        };
+
+        // Hitung total harga
+        const bahanHarga = hargaBahan[bahan];
+        const sablonHarga = hargaSablon[sablon];
+        const totalHarga = (bahanHarga + sablonHarga) * jumlah;
+
+        // Tampilkan hasil di halaman
+        document.getElementById('bahan-harga').textContent = bahan;
+        document.getElementById('sablon-harga').textContent = sablon;
+        document.getElementById('jumlah-harga').textContent = jumlah;
+        document.getElementById('total-harga').textContent = "Rp " + totalHarga.toLocaleString();
+
+        // Tambahkan event listener ke tombol untuk menyertakan total harga dalam URL
+        document.getElementById('lanjut-pembayaran-btn').addEventListener('click', function () {
+            const pembayaranUrl = `pembayaran.html?total-harga=${totalHarga}`;
+            this.href = pembayaranUrl;
+        });
+    </script>
+</body>
+</html>

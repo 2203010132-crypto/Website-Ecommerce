@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kelola Inventaris</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(145deg, #f0f8ff, #e6f2ff);
+            text-align: center;
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background: linear-gradient(90deg, #007bff, #0056b3);
+            color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .navbar h1 {
+            margin: 0;
+        }
+        .container {
+            padding: 2rem;
+        }
+        table {
+            width: 80%;
+            margin: 2rem auto;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        table th, table td {
+            padding: 12px 15px;
+            text-align: center;
+            vertical-align: middle;
+            border-bottom: 1px solid #ddd;
+        }
+        table th {
+            background: linear-gradient(90deg, #007bff, #0056b3);
+            color: white;
+        }
+        table tr:hover {
+            background: #f1f1f1;
+        }
+        table td {
+            color: #333;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 5px;
+            background: linear-gradient(145deg, #007bff, #0056b3);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2), 0 2px 4px rgba(0, 0, 0, 0.1) inset;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(145deg, #0056b3, #003f7f);
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <h1>Kelola Inventaris</h1>
+        <a href="menu.html" class="btn">Kembali ke Dashboard</a>
+    </div>
+
+    <div class="container">
+        <h2>Stok Bahan Kaos</h2>
+        <table id="inventoryTable">
+            <thead>
+                <tr>
+                    <th>Bahan</th>
+                    <th>Stok</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>30s</td>
+                    <td><span class="stock">1200</span></td>
+                    <td><button class="btn edit-btn" onclick="editStock(this)">Edit</button></td>
+                </tr>
+                <tr>
+                    <td>28s</td>
+                    <td><span class="stock">900</span></td>
+                    <td><button class="btn edit-btn" onclick="editStock(this)">Edit</button></td>
+                </tr>
+                <tr>
+                    <td>24s</td>
+                    <td><span class="stock">1500</span></td>
+                    <td><button class="btn edit-btn" onclick="editStock(this)">Edit</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Fungsi untuk mengedit stok
+        function editStock(button) {
+            const row = button.parentElement.parentElement;
+            const materialName = row.cells[0].textContent;
+            const stockCell = row.querySelector('.stock');
+            const currentStock = parseInt(stockCell.textContent);
+            const newStock = prompt("Masukkan stok baru:", currentStock);
+
+            if (newStock !== null && !isNaN(newStock) && parseInt(newStock) >= 0) {
+                const updatedStock = parseInt(newStock);
+                stockCell.textContent = updatedStock;
+
+                // Simpan ke localStorage
+                const inventory = JSON.parse(localStorage.getItem('inventory')) || {};
+                inventory[materialName] = updatedStock;
+                localStorage.setItem('inventory', JSON.stringify(inventory));
+
+                alert("Stok berhasil diperbarui!");
+            } else {
+                alert("Masukkan jumlah stok yang valid!");
+            }
+        }
+
+        // Fungsi untuk memuat data dari localStorage saat halaman dimuat
+        window.addEventListener('load', function () {
+            const inventory = JSON.parse(localStorage.getItem('inventory')) || {};
+            const rows = document.querySelectorAll('#inventoryTable tbody tr');
+
+            rows.forEach(row => {
+                const materialName = row.cells[0].textContent;
+                if (inventory[materialName] !== undefined) {
+                    row.querySelector('.stock').textContent = inventory[materialName];
+                }
+            });
+        });
+    </script>
+</body>
+</html>
